@@ -408,6 +408,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks (user_id);
+CREATE INDEX IF NOT EXISTS idx_tasks_user_status_due ON tasks (user_id, status, due_date);
+CREATE INDEX IF NOT EXISTS idx_tasks_status_due ON tasks (status, due_date);
 
 CREATE TABLE IF NOT EXISTS task_reminders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -445,6 +448,9 @@ CREATE TABLE IF NOT EXISTS calendar_events (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_calendar_events_owner_id ON calendar_events (owner_id);
+CREATE INDEX IF NOT EXISTS idx_calendar_events_owner_start ON calendar_events (owner_id, start_at);
+CREATE INDEX IF NOT EXISTS idx_calendar_events_start_at ON calendar_events (start_at);
 
 CREATE TABLE IF NOT EXISTS event_participants (
     event_id UUID NOT NULL REFERENCES calendar_events(id) ON DELETE CASCADE,
@@ -609,6 +615,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     status notification_status_enum DEFAULT 'pending',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications (user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_status ON notifications (user_id, status);
+CREATE INDEX IF NOT EXISTS idx_notifications_scheduled_at ON notifications (scheduled_at);
 
 CREATE TABLE IF NOT EXISTS notification_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -628,6 +637,8 @@ CREATE TABLE IF NOT EXISTS ai_memories (
     embedding_id TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_ai_memories_user_id ON ai_memories (user_id);
+CREATE INDEX IF NOT EXISTS idx_ai_memories_user_created_at ON ai_memories (user_id, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS ai_recommendations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -667,6 +678,7 @@ CREATE TABLE IF NOT EXISTS daily_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, metric_date)
 );
+CREATE INDEX IF NOT EXISTS idx_daily_metrics_user_date ON daily_metrics (user_id, metric_date);
 
 CREATE TABLE IF NOT EXISTS weekly_metrics (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -676,6 +688,7 @@ CREATE TABLE IF NOT EXISTS weekly_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, week_start)
 );
+CREATE INDEX IF NOT EXISTS idx_weekly_metrics_user_week ON weekly_metrics (user_id, week_start);
 
 CREATE TABLE IF NOT EXISTS monthly_metrics (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -685,6 +698,7 @@ CREATE TABLE IF NOT EXISTS monthly_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, month_start)
 );
+CREATE INDEX IF NOT EXISTS idx_monthly_metrics_user_month ON monthly_metrics (user_id, month_start);
 
 CREATE TABLE IF NOT EXISTS life_scores (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -743,9 +757,6 @@ CREATE TABLE IF NOT EXISTS leaderboards (
     standings JSONB,
     generated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
-
--- Index hints for analytics queries
-CREATE INDEX IF NOT EXISTS idx_daily_metrics_user_date ON daily_metrics (user_id, metric_date);
 
 -- Triggers to update updated_at fields
 -- Attach trigger to tables that have updated_at
