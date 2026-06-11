@@ -15,3 +15,9 @@ class UserService:
 
     async def get_user_by_email(self, email: str):
         return await self.repo.get_by_email(email)
+
+    async def get_user_by_id(self, user_id):
+        return await self.repo.get_by_id(user_id)
+
+    async def list_users(self, limit: int = 20, offset: int = 0):
+        return await self.repo.list(limit=limit, offset=offset)

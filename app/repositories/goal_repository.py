@@ -12,6 +12,8 @@ class GoalRepository:
     async def create(self, goal: Goal):
         self.session.add(goal)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(goal)
         return goal
 
     async def get(self, goal_id):
@@ -27,9 +29,13 @@ class GoalRepository:
     async def add_milestone(self, milestone: GoalMilestone):
         self.session.add(milestone)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(milestone)
         return milestone
 
     async def add_progress(self, progress: GoalProgress):
         self.session.add(progress)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(progress)
         return progress

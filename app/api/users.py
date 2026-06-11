@@ -18,7 +18,7 @@ async def create_user(payload: UserCreate, db: AsyncSession = Depends(get_db)):
 @router.get('/{user_id}', response_model=UserRead)
 async def get_user(user_id: str, db: AsyncSession = Depends(get_db)):
     svc = UserService(db)
-    user = await svc.get_user_by_email(user_id)
+    user = await svc.get_user_by_id(user_id)
     if not user:
         raise HTTPException(status_code=404, detail='User not found')
     return UserRead.from_orm(user)
@@ -26,7 +26,6 @@ async def get_user(user_id: str, db: AsyncSession = Depends(get_db)):
 
 @router.get('/', response_model=List[UserRead])
 async def list_users(limit: int = Query(20, ge=1, le=100), db: AsyncSession = Depends(get_db)):
-    # simple listing via direct query (could move to repo)
-    q = await db.execute('SELECT * FROM users WHERE is_deleted = false LIMIT :lim', {'lim': limit})
-    rows = q.fetchall()
-    return []
+    svc = UserService(db)
+    users = await svc.list_users(limit=limit)
+    return [UserRead.from_orm(user) for user in users]

@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from enum import Enum
 
-from sqlalchemy import DateTime, Boolean, Integer, String, JSON, func, text, Index
+from sqlalchemy import Boolean, DateTime, func, text
 from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -14,22 +14,38 @@ class Base(DeclarativeBase):
 
 
 class IDMixin:
-    id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True, server_default=text("gen_random_uuid()"))
+    id: Mapped[uuid.UUID] = mapped_column(
+        PGUUID(as_uuid=True),
+        primary_key=True,
+        server_default=text("gen_random_uuid()"),
+    )
 
 
 class AuditMixin:
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
-    created_by: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), nullable=True)
-    updated_by: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
+    )
+    created_by: Mapped[uuid.UUID | None] = mapped_column(PGUUID(as_uuid=True), nullable=True)
+    updated_by: Mapped[uuid.UUID | None] = mapped_column(PGUUID(as_uuid=True), nullable=True)
 
 
 class SoftDeleteMixin:
-    is_active: Mapped[bool] = mapped_column(Boolean, server_default=text('true'))
-    is_deleted: Mapped[bool] = mapped_column(Boolean, server_default=text('false'))
+    is_active: Mapped[bool] = mapped_column(Boolean, server_default=text('true'), nullable=False)
+    is_deleted: Mapped[bool] = mapped_column(Boolean, server_default=text('false'), nullable=False)
 
 
-# Enums (python-side)
+class TimestampMixin(AuditMixin):
+    pass
+
+
 class GenderEnum(str, Enum):
     male = 'male'
     female = 'female'
@@ -105,32 +121,3 @@ class PeriodFlowEnum(str, Enum):
     heavy = 'heavy'
     spotting = 'spotting'
     none = 'none'
-from datetime import datetime
-from sqlalchemy import Column, Boolean, DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase
-import sqlalchemy as sa
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class IDMixin:
-    id = sa.Column(UUID(as_uuid=True), primary_key=True, server_default=sa.text('gen_random_uuid()'))
-
-
-class AuditMixin:
-    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
-    created_by = Column(UUID(as_uuid=True), nullable=True)
-    updated_by = Column(UUID(as_uuid=True), nullable=True)
-
-
-class SoftDeleteMixin:
-    is_active = Column(Boolean, default=True, nullable=False)
-    is_deleted = Column(Boolean, default=False, nullable=False)
-
-
-class TimestampMixin(AuditMixin):
-    pass

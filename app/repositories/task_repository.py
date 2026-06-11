@@ -12,6 +12,8 @@ class TaskRepository:
     async def create(self, task: Task):
         self.session.add(task)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(task)
         return task
 
     async def get(self, task_id):
@@ -27,9 +29,13 @@ class TaskRepository:
     async def add_reminder(self, reminder: TaskReminder):
         self.session.add(reminder)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(reminder)
         return reminder
 
     async def add_comment(self, comment: TaskComment):
         self.session.add(comment)
         await self.session.flush()
+        await self.session.commit()
+        await self.session.refresh(comment)
         return comment
