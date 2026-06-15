@@ -8,7 +8,7 @@ ON CONFLICT (email) DO NOTHING;
 -- Basic profiles
 INSERT INTO user_profiles (user_id, first_name, last_name, college, department, year)
 VALUES
-  ('11111111-1111-1111-1111-111111111111','Nhowmitha','K','Example College','CSE',3),
-  ('22222222-2222-2222-2222-222222222222','Ambika','R','Example College','ECE',4),
-  ('33333333-3333-3333-3333-333333333333','Diviya','S','Example College','IT',2)
+  ('23AIA63','Nhowmitha','S','KGISL INSTITUTE OF TECHNOLOGY','AI&DS',4),
+  ('23AIA06','Ambika','S','KGISL INSTITUTE OF TECHNOLOGY','AI&DS',4),
+  ('23AIA21','Diviya','V','KGISL INSTITUTE OF TECHNOLOGY','AI&DS',4)
 ON CONFLICT DO NOTHING;
