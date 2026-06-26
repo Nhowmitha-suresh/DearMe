@@ -1,3 +1,21 @@
+from __future__ import annotations
+
+import uuid
+from datetime import datetime
+from typing import Optional
+from sqlalchemy import JSON, DateTime
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
+
+from app.models.base import Base, IDMixin
+
+
+class LifeScore(Base, IDMixin):
+    __tablename__ = 'life_scores'
+    user_id: Mapped[uuid.UUID] = mapped_column(PGUUID(as_uuid=True), nullable=False)
+    score: Mapped[Optional[float]] = mapped_column(JSON)
+    components: Mapped[Optional[dict]] = mapped_column(JSON)
+    calculated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 import sqlalchemy as sa
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import UUID
