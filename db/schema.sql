@@ -70,22 +70,35 @@ CREATE TABLE IF NOT EXISTS users (
 );
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 
+CREATE TABLE IF NOT EXISTS user_streaks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+    study_streak INTEGER DEFAULT 0,
+    water_streak INTEGER DEFAULT 0,
+    coding_streak INTEGER DEFAULT 0,
+    habit_streak INTEGER DEFAULT 0,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_user_streaks_user_id ON user_streaks (user_id);
+
 CREATE TABLE IF NOT EXISTS user_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     first_name TEXT,
     last_name TEXT,
     date_of_birth DATE,
     gender gender_enum,
     college TEXT,
     department TEXT,
-    year INTEGER,
+    year INTEGER CHECK (year BETWEEN 1 AND 5),
     height_cm NUMERIC(5,2),
     weight_kg NUMERIC(5,2),
     blood_group VARCHAR(5),
     ai_personality TEXT,
     avatar_url TEXT,
     timezone TEXT,
+    student_roll_no TEXT UNIQUE,
     is_active BOOLEAN DEFAULT TRUE,
     is_deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -97,7 +110,7 @@ CREATE INDEX IF NOT EXISTS idx_user_profiles_user_id ON user_profiles (user_id);
 
 CREATE TABLE IF NOT EXISTS user_preferences (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     theme TEXT DEFAULT 'calm',
     reminder_preferences JSONB DEFAULT '{}'::jsonb,
     notification_preferences JSONB DEFAULT '{}'::jsonb,
@@ -209,7 +222,7 @@ CREATE INDEX IF NOT EXISTS idx_water_logs_log_date ON water_logs (log_date);
 CREATE TABLE IF NOT EXISTS sleep_scores (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    score INTEGER,
+    score INTEGER CHECK (score BETWEEN 0 AND 100),
     calculated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     details JSONB,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
@@ -222,7 +235,7 @@ CREATE TABLE IF NOT EXISTS sleep_logs (
     sleep_time TIMESTAMP WITH TIME ZONE,
     wake_time TIMESTAMP WITH TIME ZONE,
     duration_minutes INTEGER,
-    quality INTEGER,
+    quality INTEGER CHECK (quality BETWEEN 1 AND 5),
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -274,7 +287,7 @@ CREATE TABLE IF NOT EXISTS period_cycles (
     start_date DATE NOT NULL,
     end_date DATE,
     flow period_flow_enum DEFAULT 'none',
-    pain_level INTEGER,
+    pain_level INTEGER CHECK (pain_level BETWEEN 0 AND 10),
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -408,6 +421,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks (user_id);
+CREATE INDEX IF NOT EXISTS idx_tasks_user_status_due ON tasks (user_id, status, due_date);
+CREATE INDEX IF NOT EXISTS idx_tasks_status_due ON tasks (status, due_date);
 
 CREATE TABLE IF NOT EXISTS task_reminders (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -445,6 +461,9 @@ CREATE TABLE IF NOT EXISTS calendar_events (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_calendar_events_owner_id ON calendar_events (owner_id);
+CREATE INDEX IF NOT EXISTS idx_calendar_events_owner_start ON calendar_events (owner_id, start_at);
+CREATE INDEX IF NOT EXISTS idx_calendar_events_start_at ON calendar_events (start_at);
 
 CREATE TABLE IF NOT EXISTS event_participants (
     event_id UUID NOT NULL REFERENCES calendar_events(id) ON DELETE CASCADE,
@@ -512,7 +531,7 @@ CREATE TABLE IF NOT EXISTS interview_feedback (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     interview_id UUID REFERENCES interviews(id) ON DELETE CASCADE,
     feedback TEXT,
-    rating INTEGER
+    rating INTEGER CHECK (rating BETWEEN 1 AND 5)
 );
 
 -- LEARNING TRACKER
@@ -528,7 +547,7 @@ CREATE TABLE IF NOT EXISTS learning_sessions (
     subject_id UUID REFERENCES subjects(id) ON DELETE CASCADE,
     topic TEXT,
     duration_minutes INTEGER,
-    confidence INTEGER,
+    confidence INTEGER CHECK (confidence BETWEEN 1 AND 5),
     notes TEXT,
     started_at TIMESTAMP WITH TIME ZONE,
     ended_at TIMESTAMP WITH TIME ZONE
@@ -544,7 +563,7 @@ CREATE TABLE IF NOT EXISTS learning_progress (
 -- CODING TRACKER
 CREATE TABLE IF NOT EXISTS leetcode_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     username TEXT UNIQUE,
     total_solved INTEGER,
     streak INTEGER
@@ -560,7 +579,7 @@ CREATE TABLE IF NOT EXISTS leetcode_activity (
 
 CREATE TABLE IF NOT EXISTS github_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     username TEXT UNIQUE,
     contributions INTEGER
 );
@@ -575,7 +594,7 @@ CREATE TABLE IF NOT EXISTS github_activity (
 
 CREATE TABLE IF NOT EXISTS linkedin_profiles (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    user_id UUID UNIQUE REFERENCES users(id) ON DELETE CASCADE,
     username TEXT UNIQUE,
     connections INTEGER
 );
@@ -609,6 +628,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     status notification_status_enum DEFAULT 'pending',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_notifications_user_id ON notifications (user_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_status ON notifications (user_id, status);
+CREATE INDEX IF NOT EXISTS idx_notifications_scheduled_at ON notifications (scheduled_at);
 
 CREATE TABLE IF NOT EXISTS notification_logs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -628,6 +650,8 @@ CREATE TABLE IF NOT EXISTS ai_memories (
     embedding_id TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );
+CREATE INDEX IF NOT EXISTS idx_ai_memories_user_id ON ai_memories (user_id);
+CREATE INDEX IF NOT EXISTS idx_ai_memories_user_created_at ON ai_memories (user_id, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS ai_recommendations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -664,9 +688,15 @@ CREATE TABLE IF NOT EXISTS daily_metrics (
     mood_score NUMERIC,
     study_minutes INTEGER,
     coding_minutes INTEGER,
+    task_completion_rate NUMERIC(5,2),
+    habit_completion_rate NUMERIC(5,2),
+    journal_entries_count INTEGER DEFAULT 0,
+    sleep_duration_minutes INTEGER,
+    life_score NUMERIC(5,2),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, metric_date)
 );
+CREATE INDEX IF NOT EXISTS idx_daily_metrics_user_date ON daily_metrics (user_id, metric_date);
 
 CREATE TABLE IF NOT EXISTS weekly_metrics (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -676,6 +706,7 @@ CREATE TABLE IF NOT EXISTS weekly_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, week_start)
 );
+CREATE INDEX IF NOT EXISTS idx_weekly_metrics_user_week ON weekly_metrics (user_id, week_start);
 
 CREATE TABLE IF NOT EXISTS monthly_metrics (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -685,6 +716,7 @@ CREATE TABLE IF NOT EXISTS monthly_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     UNIQUE (user_id, month_start)
 );
+CREATE INDEX IF NOT EXISTS idx_monthly_metrics_user_month ON monthly_metrics (user_id, month_start);
 
 CREATE TABLE IF NOT EXISTS life_scores (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -758,8 +790,15 @@ BEGIN
   END LOOP;
 END$$;
 
--- Materialized view example (life score aggregate)
+-- Materialized views for dashboard aggregates
 CREATE MATERIALIZED VIEW IF NOT EXISTS mv_life_scores AS
 SELECT user_id, max(calculated_at) as last_calc, avg(score) as avg_score
 FROM life_scores
 GROUP BY user_id;
+
+CREATE MATERIALIZED VIEW IF NOT EXISTS mv_daily_summary AS
+SELECT user_id, metric_date, sleep_score, water_ml, mood_score, study_minutes, coding_minutes,
+       task_completion_rate, habit_completion_rate, journal_entries_count, life_score
+FROM daily_metrics;
+
+CREATE INDEX IF NOT EXISTS idx_mv_daily_summary_user_date ON mv_daily_summary (user_id, metric_date);
