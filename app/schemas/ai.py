@@ -1,7 +1,8 @@
-from pydantic import BaseModel
-from typing import Optional, List
-import uuid
 from datetime import datetime
+from typing import List, Optional
+import uuid
+
+from pydantic import BaseModel, ConfigDict
 
 
 class AIMemoryCreate(BaseModel):
@@ -12,10 +13,9 @@ class AIMemoryCreate(BaseModel):
 
 class AIMemoryRead(AIMemoryCreate):
     id: uuid.UUID
-    created_at: Optional[datetime]
+    created_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class ChatRequest(BaseModel):

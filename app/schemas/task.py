@@ -1,20 +1,21 @@
 from __future__ import annotations
-from pydantic import BaseModel
+
+from datetime import datetime
 from typing import Optional
 import uuid
-from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict
 
 
 class TaskCreate(BaseModel):
     title: str
-    description: Optional[str]
+    description: Optional[str] = None
 
 
 class TaskRead(TaskCreate):
     id: uuid.UUID
     user_id: uuid.UUID
-    due_date: Optional[datetime]
-    completed_at: Optional[datetime]
+    due_date: Optional[datetime] = None
+    completed_at: Optional[datetime] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

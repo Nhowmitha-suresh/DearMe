@@ -1,34 +1,35 @@
 from __future__ import annotations
-from pydantic import BaseModel, EmailStr
+
+from datetime import date
 from typing import Optional
 import uuid
-from datetime import date
+
+from pydantic import BaseModel, EmailStr, ConfigDict
 
 
 class UserBase(BaseModel):
     email: EmailStr
-    primary_phone: Optional[str]
+    primary_phone: Optional[str] = None
 
 
 class UserCreate(UserBase):
-    firebase_uid: Optional[str]
+    firebase_uid: Optional[str] = None
 
 
 class UserRead(UserBase):
     id: uuid.UUID
-    created_at: Optional[date]
+    created_at: Optional[date] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserProfileCreate(BaseModel):
-    first_name: Optional[str]
-    last_name: Optional[str]
-    date_of_birth: Optional[date]
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    date_of_birth: Optional[date] = None
 
 
 class UserProfileRead(UserProfileCreate):
     id: uuid.UUID
-    class Config:
-        orm_mode = True
+
+    model_config = ConfigDict(from_attributes=True)

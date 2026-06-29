@@ -1,21 +1,22 @@
 from __future__ import annotations
-from pydantic import BaseModel
-from typing import Optional
+
 from datetime import datetime
+from typing import Optional
 import uuid
+
+from pydantic import BaseModel, ConfigDict
 
 
 class WaterLogCreate(BaseModel):
     amount_ml: int
-    logged_at: Optional[datetime]
+    logged_at: Optional[datetime] = None
 
 
 class WaterLogRead(WaterLogCreate):
     id: uuid.UUID
     user_id: uuid.UUID
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SleepLogCreate(BaseModel):
@@ -26,4 +27,4 @@ class SleepLogCreate(BaseModel):
 class MealLogCreate(BaseModel):
     meal_type: str
     eaten_at: datetime
-    calories: Optional[int]
+    calories: Optional[int] = None

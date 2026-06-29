@@ -1,21 +1,22 @@
 from __future__ import annotations
-from pydantic import BaseModel
+
+from datetime import date
 from typing import Optional
 import uuid
-from datetime import date
+
+from pydantic import BaseModel, ConfigDict
 
 
 class GoalCreate(BaseModel):
     title: str
-    description: Optional[str]
-    category: Optional[str]
+    description: Optional[str] = None
+    category: Optional[str] = None
 
 
 class GoalRead(GoalCreate):
     id: uuid.UUID
     user_id: uuid.UUID
-    start_date: Optional[date]
-    end_date: Optional[date]
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

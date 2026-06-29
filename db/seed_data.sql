@@ -4,6 +4,7 @@
 
 INSERT INTO users (id, email, primary_phone, firebase_uid, created_at)
 VALUES
+<<<<<<< HEAD
   ('11111111-1111-1111-1111-111111111111','nhowmi05@gmail.com','+91 90000 50005','fb_nhowmi05', now()),
   ('22222222-2222-2222-2222-222222222222','ambikasoundharan@gmail.com','+91 90000 62206','fb_ambika_soundharan', now()),
   ('33333333-3333-3333-3333-333333333333','diviya2206@gmail.com','+91 90000 62206','fb_diviya_2206', now())
@@ -103,3 +104,9 @@ VALUES
   ('98444444-1111-1111-1111-111111111111','33333333-3333-3333-3333-333333333333', current_date - 1, 69, 1800, 6.4, 75, 30)
 ON CONFLICT (user_id, metric_date) DO NOTHING;
 
+=======
+  ('11111111-1111-1111-1111-111111111111','Nhowmitha','S','Example College','AIDS',4),
+  ('22222222-2222-2222-2222-222222222222','Ambika','S','Example College','AIDS',4),
+  ('33333333-3333-3333-3333-333333333333','Diviya','V','Example College','AIDS',4)
+ON CONFLICT DO NOTHING;
+>>>>>>> 6848afa (added ai mem)
