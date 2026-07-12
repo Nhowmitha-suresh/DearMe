@@ -9,6 +9,10 @@ from .notifications import router as notifications_router
 from .tasks import router as tasks_router
 from .users import router as users_router
 from .river import router as river_router
+from .finance import router as finance_router
+from .student_hub import router as student_hub_router
+from .coding import router as coding_router
+from .career import router as career_router
 
 
 api_router = APIRouter(prefix='/api/v1')
@@ -20,4 +24,9 @@ api_router.include_router(tasks_router)
 api_router.include_router(journal_router)
 api_router.include_router(notifications_router)
 api_router.include_router(ai_router)
-api_router.include_router(river_router)
+api_router.include_router(river_router)
+api_router.include_router(finance_router)
+api_router.include_router(student_hub_router)
+api_router.include_router(coding_router)
+api_router.include_router(career_router)
+

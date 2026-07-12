@@ -17,8 +17,10 @@ class User(Base, IDMixin, AuditMixin, SoftDeleteMixin):
     __table_args__ = (Index('ix_users_email', 'email'),)
 
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    password_hash: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     primary_phone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     firebase_uid: Mapped[Optional[str]] = mapped_column(String, unique=True, nullable=True)
+
 
     profiles: Mapped[list['UserProfile']] = relationship(
         'UserProfile', back_populates='user', cascade='all, delete-orphan'

@@ -33,3 +33,19 @@ class UserProfileRead(UserProfileCreate):
     id: uuid.UUID
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserRegister(BaseModel):
+    email: EmailStr
+    password: str
+    primary_phone: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+

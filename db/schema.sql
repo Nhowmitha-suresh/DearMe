@@ -59,6 +59,7 @@ $$ LANGUAGE plpgsql;
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email TEXT UNIQUE NOT NULL,
+    password_hash TEXT,
     primary_phone TEXT,
     firebase_uid TEXT UNIQUE,
     is_active BOOLEAN DEFAULT TRUE,
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS users (
     created_by UUID,
     updated_by UUID
 );
+
 CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
 
 CREATE TABLE IF NOT EXISTS user_streaks (
@@ -802,3 +804,58 @@ SELECT user_id, metric_date, sleep_score, water_ml, mood_score, study_minutes, c
 FROM daily_metrics;
 
 CREATE INDEX IF NOT EXISTS idx_mv_daily_summary_user_date ON mv_daily_summary (user_id, metric_date);
+
+-- FINANCE MODULE TABLES
+CREATE TABLE IF NOT EXISTS expenses (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    amount NUMERIC(10,2) NOT NULL,
+    category TEXT NOT NULL,
+    description TEXT,
+    logged_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    is_active BOOLEAN DEFAULT TRUE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_expenses_user_id ON expenses (user_id);
+CREATE INDEX IF NOT EXISTS idx_expenses_logged_at ON expenses (logged_at);
+
+CREATE TABLE IF NOT EXISTS savings_goals (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    target_amount NUMERIC(10,2) NOT NULL,
+    current_amount NUMERIC(10,2) DEFAULT 0.00,
+    target_date DATE,
+    is_active BOOLEAN DEFAULT TRUE,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_savings_goals_user_id ON savings_goals (user_id);
+
+-- CODING MODULE TABLES
+CREATE TABLE IF NOT EXISTS coding_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    leetcode_username TEXT,
+    github_username TEXT,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_coding_profiles_user ON coding_profiles (user_id);
+
+CREATE TABLE IF NOT EXISTS coding_activities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    commits_count INTEGER DEFAULT 0,
+    problems_solved INTEGER DEFAULT 0,
+    logged_date DATE DEFAULT current_date,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_coding_activities_user ON coding_activities (user_id);
+CREATE INDEX IF NOT EXISTS idx_coding_activities_date ON coding_activities (logged_date);
+
+

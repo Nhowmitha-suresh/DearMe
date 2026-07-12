@@ -27,6 +27,10 @@ from .squad import Leaderboard, Squad, SquadChallenge, SquadChallengeProgress, S
 from .ai_memory import AIConversation, AIConversationMessage, AIMemory, AIRecommendation
 from .calendar import CalendarEvent, EventCategory, EventParticipant
 from .analytics import DailyMetric, LifeScore, MonthlyMetric, WeeklyMetric
+from .finance import Expense, SavingsGoal
+from .coding import CodingProfile, CodingActivity
+
+
 
 __all__ = [
     'Base',
@@ -104,5 +108,11 @@ __all__ = [
     'LifeScore',
     'MonthlyMetric',
     'WeeklyMetric',
+    'Expense',
+    'SavingsGoal',
+    'CodingProfile',
+    'CodingActivity',
 ]
+
+
 
