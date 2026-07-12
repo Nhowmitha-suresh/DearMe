@@ -9,13 +9,16 @@ class FloatingMascot extends StatefulWidget {
   State<FloatingMascot> createState() => _FloatingMascotState();
 }
 
-class _FloatingMascotState extends State<FloatingMascot> with SingleTickerProviderStateMixin {
+class _FloatingMascotState extends State<FloatingMascot>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat(reverse: true);
+    _ctrl =
+        AnimationController(vsync: this, duration: const Duration(seconds: 4))
+          ..repeat(reverse: true);
   }
 
   @override
@@ -57,4 +60,3 @@ class _FloatingMascotState extends State<FloatingMascot> with SingleTickerProvid
     );
   }
 }
-

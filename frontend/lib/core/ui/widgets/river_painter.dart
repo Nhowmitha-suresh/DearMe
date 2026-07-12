@@ -2,9 +2,9 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class RiverFlowWidget extends StatefulWidget {
-  final double flowRate;     // Speed multiplier (e.g. 0.5 to 2.0)
-  final double clarity;      // Clarity percentage (0.0 to 1.0)
-  final double height;       // Canvas height
+  final double flowRate; // Speed multiplier (e.g. 0.5 to 2.0)
+  final double clarity; // Clarity percentage (0.0 to 1.0)
+  final double height; // Canvas height
 
   const RiverFlowWidget({
     Key? key,
@@ -17,7 +17,8 @@ class RiverFlowWidget extends StatefulWidget {
   State<RiverFlowWidget> createState() => _RiverFlowWidgetState();
 }
 
-class _RiverFlowWidgetState extends State<RiverFlowWidget> with SingleTickerProviderStateMixin {
+class _RiverFlowWidgetState extends State<RiverFlowWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -91,7 +92,7 @@ class RiverFlowPainter extends CustomPainter {
 
     final basePaint = Paint()
       ..color = riverBaseColor
-      ..style = PaintStyle.fill;
+      ..style = PaintingStyle.fill;
 
     // Draw solid base river background
     canvas.drawRect(Rect.fromLTWH(0, 0, width, height), basePaint);
@@ -99,7 +100,7 @@ class RiverFlowPainter extends CustomPainter {
     // Draw Wave 1 (Mid-depth wave flowing right)
     final wave1Paint = Paint()
       ..color = riverWave1Color
-      ..style = PaintStyle.fill;
+      ..style = PaintingStyle.fill;
 
     final path1 = Path();
     path1.moveTo(0, height);
@@ -118,7 +119,7 @@ class RiverFlowPainter extends CustomPainter {
     // Draw Wave 2 (Top surface wave flowing slightly faster)
     final wave2Paint = Paint()
       ..color = riverWave2Color
-      ..style = PaintStyle.fill;
+      ..style = PaintingStyle.fill;
 
     final path2 = Path();
     path2.moveTo(0, height);
@@ -136,7 +137,7 @@ class RiverFlowPainter extends CustomPainter {
     // Draw little details like sparkles/river foam lines
     final foamPaint = Paint()
       ..color = Colors.white.withOpacity(0.2 + (0.3 * clarity))
-      ..style = PaintStyle.stroke
+      ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
     final path3 = Path();
@@ -144,7 +145,7 @@ class RiverFlowPainter extends CustomPainter {
       final phase = animationValue * 2 * math.pi * flowRate * 1.1 + x;
       final y = height * 0.52 + math.sin(x + phase) * 4;
       path3.moveTo(x, y);
-      path3.quadraticBezierTo(x + 15, y - 2, x + 30, y + math.cos(phase)*2);
+      path3.quadraticBezierTo(x + 15, y - 2, x + 30, y + math.cos(phase) * 2);
     }
     canvas.drawPath(path3, foamPaint);
   }

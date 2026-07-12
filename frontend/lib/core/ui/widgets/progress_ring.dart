@@ -5,7 +5,9 @@ class AnimatedProgressRing extends StatelessWidget {
   final double percent;
   final double size;
   final String label;
-  const AnimatedProgressRing({Key? key, required this.percent, this.size = 120, this.label = ''}) : super(key: key);
+  const AnimatedProgressRing(
+      {Key? key, required this.percent, this.size = 120, this.label = ''})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +18,10 @@ class AnimatedProgressRing extends StatelessWidget {
       center: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('${(percent * 100).toInt()}%', style: const TextStyle(fontWeight: FontWeight.bold)),
-          if (label.isNotEmpty) Text(label, style: const TextStyle(fontSize: 12)),
+          Text('${(percent * 100).toInt()}%',
+              style: const TextStyle(fontWeight: FontWeight.bold)),
+          if (label.isNotEmpty)
+            Text(label, style: const TextStyle(fontSize: 12)),
         ],
       ),
       progressColor: const Color(0xFFFF8FB3),

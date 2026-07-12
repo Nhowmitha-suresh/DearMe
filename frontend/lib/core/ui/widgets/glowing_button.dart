@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 class GlowingButton extends StatefulWidget {
   final Widget child;
   final VoidCallback onTap;
-  const GlowingButton({Key? key, required this.child, required this.onTap}) : super(key: key);
+  const GlowingButton({Key? key, required this.child, required this.onTap})
+      : super(key: key);
 
   @override
   State<GlowingButton> createState() => _GlowingButtonState();
 }
 
-class _GlowingButtonState extends State<GlowingButton> with SingleTickerProviderStateMixin {
+class _GlowingButtonState extends State<GlowingButton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _ctrl;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat(reverse: true);
+    _ctrl =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2))
+          ..repeat(reverse: true);
   }
 
   @override
@@ -38,7 +42,10 @@ class _GlowingButtonState extends State<GlowingButton> with SingleTickerProvider
               color: const Color(0xFFFFCFE6),
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
-                BoxShadow(color: const Color(0xFFFFA3C4).withOpacity(0.4), blurRadius: glow, spreadRadius: 1),
+                BoxShadow(
+                    color: const Color(0xFFFFA3C4).withOpacity(0.4),
+                    blurRadius: glow,
+                    spreadRadius: 1),
               ],
             ),
             child: widget.child,

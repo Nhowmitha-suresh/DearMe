@@ -27,6 +27,13 @@ class UserProfileCreate(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     date_of_birth: Optional[date] = None
+    college: Optional[str] = None
+    department: Optional[str] = None
+    year: Optional[int] = None
+    student_roll_no: Optional[str] = None
+    gpa: Optional[float] = None
+    skills: Optional[list[str]] = None
+    target_roles: Optional[list[str]] = None
 
 
 class UserProfileRead(UserProfileCreate):

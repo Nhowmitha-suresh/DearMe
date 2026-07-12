@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/ui/widgets/river_painter.dart';
 import '../../core/ui/widgets/glowing_button.dart';
 import '../../core/ui/widgets/mascot.dart';
+import '../hubs/hubs_dashboard.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -22,9 +23,6 @@ class _DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('NADHI'),
@@ -75,7 +73,8 @@ class _DashboardViewState extends State<DashboardView> {
                     ],
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, py: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -89,7 +88,8 @@ class _DashboardViewState extends State<DashboardView> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.wb_twighlight, size: 18, color: Color(0xFF00ACC1)),
+                        const Icon(Icons.wb_twighlight,
+                            size: 18, color: Color(0xFF00ACC1)),
                         const SizedBox(width: 6),
                         Text(
                           weather.toUpperCase(),
@@ -136,18 +136,23 @@ class _DashboardViewState extends State<DashboardView> {
                           top: 16,
                           left: 16,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, py: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.water, size: 14, color: Colors.white),
+                                const Icon(Icons.water,
+                                    size: 14, color: Colors.white),
                                 const SizedBox(width: 4),
                                 Text(
                                   "Clarity: ${(clarity * 100).toInt()}%",
-                                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -157,18 +162,23 @@ class _DashboardViewState extends State<DashboardView> {
                           top: 16,
                           right: 16,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, py: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.speed, size: 14, color: Colors.white),
+                                const Icon(Icons.speed,
+                                    size: 14, color: Colors.white),
                                 const SizedBox(width: 4),
                                 Text(
                                   "Current: ${flowRate}x",
-                                  style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600),
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -181,9 +191,14 @@ class _DashboardViewState extends State<DashboardView> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildRiverFact(Icons.local_florist, "${(floraDensity * 100).toInt()}% Flora", "Banks"),
-                          _buildRiverFact(Icons.pets, "$wildlifeCount Animals", "Forests"),
-                          _buildRiverFact(Icons.edit_road, "$activeBridges Bridges", "Career Labs"),
+                          _buildRiverFact(
+                              Icons.local_florist,
+                              "${(floraDensity * 100).toInt()}% Flora",
+                              "Banks"),
+                          _buildRiverFact(
+                              Icons.pets, "$wildlifeCount Animals", "Forests"),
+                          _buildRiverFact(Icons.edit_road,
+                              "$activeBridges Bridges", "Career Labs"),
                         ],
                       ),
                     ),
@@ -214,19 +229,34 @@ class _DashboardViewState extends State<DashboardView> {
                         children: [
                           const Text(
                             "Spirit Nadhi",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF004D40)),
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF004D40)),
                           ),
                           const SizedBox(height: 4),
                           const Text(
                             "\"Your current is steady today. The focus of your morning study has carved a deep, clear channel. Let's keep this flow going.\"",
-                            style: TextStyle(fontSize: 13, fontStyle: FontStyle.italic, color: Color(0xFF00695C), height: 1.3),
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontStyle: FontStyle.italic,
+                                color: Color(0xFF00695C),
+                                height: 1.3),
                           ),
                           const SizedBox(height: 8),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const HubDetailsView(hubType: 'chat'),
+                              ));
+                            },
                             child: const Text(
                               "Tap to talk to Nadhi →",
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF00796B)),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF00796B)),
                             ),
                           ),
                         ],
@@ -263,6 +293,7 @@ class _DashboardViewState extends State<DashboardView> {
                     Icons.account_balance,
                     const Color(0xFF0077B6),
                     const Color(0xFF90E0EF),
+                    "academic",
                   ),
                   _buildEcosystemCard(
                     context,
@@ -272,24 +303,27 @@ class _DashboardViewState extends State<DashboardView> {
                     Icons.code,
                     const Color(0xFF009688),
                     const Color(0xFF80CBC4),
-                  ),
-                  _buildEcosystemCard(
-                    context,
-                    "Ecosystem Forest",
-                    "Sleep & Restoration",
-                    "7h 45m good sleep",
-                    Icons.park,
-                    const Color(0xFF2E7D32),
-                    const Color(0xFFA5D6A7),
+                    "coding",
                   ),
                   _buildEcosystemCard(
                     context,
                     "Ecosystem Gardens",
                     "Hydration & Mood",
                     "1,800ml logged",
-                    Icons.spa,
+                    Icons.local_drink,
+                    const Color(0xFF2E7D32),
+                    const Color(0xFFA5D6A7),
+                    "health",
+                  ),
+                  _buildEcosystemCard(
+                    context,
+                    "Placement Hub",
+                    "Careers & Companies",
+                    "2 active apps",
+                    Icons.business_center_outlined,
                     const Color(0xFFEF6C00),
                     const Color(0xFFFFCC80),
+                    "placement",
                   ),
                 ],
               ),
@@ -300,9 +334,15 @@ class _DashboardViewState extends State<DashboardView> {
                 child: GlowingButton(
                   child: const Text(
                     'Chat with Nadhi',
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) =>
+                          const HubDetailsView(hubType: 'chat'),
+                    ));
+                  },
                 ),
               ),
               const SizedBox(height: 36),
@@ -318,8 +358,13 @@ class _DashboardViewState extends State<DashboardView> {
       children: [
         Icon(icon, color: const Color(0xFF00838F), size: 20),
         const SizedBox(height: 4),
-        Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF004D40))),
-        Text(subtitle, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        Text(title,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+                color: Color(0xFF004D40))),
+        Text(subtitle,
+            style: const TextStyle(fontSize: 11, color: Colors.grey)),
       ],
     );
   }
@@ -332,58 +377,77 @@ class _DashboardViewState extends State<DashboardView> {
     IconData icon,
     Color primaryColor,
     Color secondaryColor,
+    String hubType,
   ) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: primaryColor.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: primaryColor.withOpacity(0.12), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: secondaryColor.withOpacity(0.3),
-                  shape: BoxShape.circle,
+    return GestureDetector(
+      onTap: () {
+        if (hubType == "placement") {
+          Navigator.of(context).pushNamed('/placement');
+        } else {
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => HubDetailsView(hubType: hubType),
+          ));
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: primaryColor.withOpacity(0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: primaryColor.withOpacity(0.12), width: 1),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: secondaryColor.withOpacity(0.3),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: primaryColor, size: 20),
                 ),
-                child: Icon(icon, color: primaryColor, size: 20),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 12, color: Colors.grey),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                subtitle,
-                style: const TextStyle(fontSize: 10, color: Colors.grey),
-              ),
-            ],
-          ),
-          Text(
-            metric,
-            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: primaryColor),
-          ),
-        ],
+                const Icon(Icons.arrow_forward_ios,
+                    size: 12, color: Colors.grey),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E293B)),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                ),
+              ],
+            ),
+            Text(
+              metric,
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: primaryColor),
+            ),
+          ],
+        ),
       ),
     );
   }

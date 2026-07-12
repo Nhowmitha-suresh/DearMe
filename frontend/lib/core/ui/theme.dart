@@ -12,7 +12,6 @@ ThemeData buildNadhiNatureTheme() {
       seedColor: secondary,
       primary: primary,
       secondary: secondary,
-      background: background,
       surface: Colors.white,
     ),
     scaffoldBackgroundColor: background,
@@ -21,7 +20,8 @@ ThemeData buildNadhiNatureTheme() {
       foregroundColor: Color(0xFF052B30),
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF052B30)),
+      titleTextStyle: TextStyle(
+          fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF052B30)),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: secondary,
@@ -32,4 +32,3 @@ ThemeData buildNadhiNatureTheme() {
 }
 
 ThemeData buildPalePinkTheme() => buildNadhiNatureTheme();
-

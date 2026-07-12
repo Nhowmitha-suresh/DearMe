@@ -61,6 +61,7 @@ class UserProfile(Base, IDMixin, AuditMixin, SoftDeleteMixin):
     ai_personality: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     timezone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    student_roll_no: Mapped[Optional[str]] = mapped_column(String, unique=True, nullable=True)
 
     user: Mapped['User'] = relationship('User', back_populates='profiles')
 

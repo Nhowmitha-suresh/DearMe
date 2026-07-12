@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class FloralBlink extends StatefulWidget {
@@ -8,7 +9,8 @@ class FloralBlink extends StatefulWidget {
   State<FloralBlink> createState() => _FloralBlinkState();
 }
 
-class _FloralBlinkState extends State<FloralBlink> with SingleTickerProviderStateMixin {
+class _FloralBlinkState extends State<FloralBlink>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   late final Animation<double> _opacity;
   late final Animation<double> _scale;
@@ -16,9 +18,13 @@ class _FloralBlinkState extends State<FloralBlink> with SingleTickerProviderStat
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat(reverse: true);
-    _opacity = Tween<double>(begin: 0.6, end: 1.0).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _scale = Tween<double>(begin: 0.95, end: 1.06).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2))
+          ..repeat(reverse: true);
+    _opacity = Tween<double>(begin: 0.6, end: 1.0)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _scale = Tween<double>(begin: 0.95, end: 1.06)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -56,9 +62,18 @@ class _FloralPainter extends CustomPainter {
     // petals
     for (int i = 0; i < 6; i++) {
       final angle = i * (360 / 6) * 3.14159 / 180;
-      final petalCenter = Offset(center.dx + (size.width * 0.22) * cos(angle), center.dy + (size.height * 0.22) * sin(angle));
-      paint.color = Color.lerp(const Color(0xFFFFCFE6), const Color(0xFFFFE6EE), i / 6)!.withOpacity(0.95);
-      canvas.drawOval(Rect.fromCenter(center: petalCenter, width: size.width * 0.38, height: size.height * 0.22), paint);
+      final petalCenter = Offset(
+          center.dx + (size.width * 0.22) * math.cos(angle),
+          center.dy + (size.height * 0.22) * math.sin(angle));
+      paint.color =
+          Color.lerp(const Color(0xFFFFCFE6), const Color(0xFFFFE6EE), i / 6)!
+              .withOpacity(0.95);
+      canvas.drawOval(
+          Rect.fromCenter(
+              center: petalCenter,
+              width: size.width * 0.38,
+              height: size.height * 0.22),
+          paint);
     }
 
     // core

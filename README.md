@@ -1,253 +1,198 @@
-# 🌸 DearMe
+# NADHI – The AI River of Life (Ecosystem Companion)
 
-> **Your Personal AI Companion for Growth, Wellness & Success**
-
-DearMe is an AI-powered personal life companion that helps students manage their health, productivity, learning, emotional well-being, and placement preparation through personalized insights, intelligent reminders, and adaptive AI guidance.
+Nadhi is a premium, nature-inspired AI life companion designed for students. By blending focus tracking, academic planners, career trackers, wellness logs, and financial budgets into a singular living world, Nadhi shifts productivity from checklists to a beautiful interactive river ecosystem.
 
 ---
 
-## 🚀 About the Project
+## 1. Project Architecture
 
-DearMe is designed to become a student's personal life operating system.
+The backend is built using FastAPI following a decoupled **Clean Architecture** (Repository + Service Layer) design, separating concerns between controllers, logic services, and persistence layers.
 
-Instead of using multiple applications for:
+```mermaid
+graph TD
+    subgraph Client Application
+        FlutterUI["Flutter Frontend (Material 3)"]
+        RiverWave["RiverFlowWidget (Custom CustomPainter)"]
+        Dashboard["Dashboard View"]
+    end
 
-* Task Management
-* Habit Tracking
-* Journaling
-* Health Monitoring
-* Placement Preparation
-* Reminders
-* Scheduling
+    subgraph API Route Layer (FastAPI)
+        APIRouter["app/api/__init__.py"]
+        AuthAPI["auth.py (Local JWT & Firebase)"]
+        RiverAPI["river.py (River state endpoint)"]
+        HubsAPI["student_hub.py, coding.py, career.py, finance.py"]
+    end
 
-DearMe combines everything into one intelligent platform powered by AI.
+    subgraph Business Logic & Persistence
+        RiverService["app/services/river_service.py"]
+        AIService["app/services/ai_service.py (Gemini + RAG)"]
+        Repors["app/repositories/ (UserRepository, etc.)"]
+        SQLModels["app/models/ (SQLAlchemy Declarative Models)"]
+        DB["PostgreSQL Database Schema"]
+    end
 
----
-
-## ✨ Key Features
-
-### 🤖 AI Companion
-
-* Personalized AI assistant
-* Daily planning and recommendations
-* Motivation and accountability
-* Context-aware guidance
-* Long-term memory and personalization
-
-### 💧 Health & Wellness
-
-* Water intake tracking
-* Sleep monitoring
-* Meal tracking
-* Menstrual cycle tracking
-* Mood analysis
-
-### 📚 Learning & Productivity
-
-* Goal management
-* Task management
-* Study session tracking
-* Habit building
-* Smart scheduling
-
-### 🎯 Placement Hub
-
-* Company tracking
-* Assessment tracking
-* Interview preparation
-* Placement readiness analytics
-* Learning progress monitoring
-
-### 📔 Smart Journal
-
-* Daily reflections
-* AI-generated summaries
-* Emotional insights
-* Personal growth analytics
-
-### 📅 Smart Calendar
-
-* Daily planner
-* Event management
-* Assessment schedules
-* Study schedules
-* Health reminders
-
----
-
-## 🏗️ System Architecture
-
-```text
-Flutter App
-      │
-      ▼
-FastAPI Backend
-      │
- ┌────┼────┐
- ▼    ▼    ▼
-PostgreSQL Redis Gemini AI
-      │
-      ▼
-   ChromaDB
+    FlutterUI --> Dashboard
+    Dashboard --> RiverWave
+    Dashboard --> APIRouter
+    APIRouter --> AuthAPI
+    APIRouter --> RiverAPI
+    APIRouter --> HubsAPI
+    RiverAPI --> RiverService
+    HubsAPI --> SQLModels
+    SQLModels --> Repors
+    Repors --> DB
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## 2. Database Schema Diagram
 
-### Frontend
+Below is the database entity-relationship diagram containing all normalized tables (including the new Finance and Coding trackers):
 
-* Flutter
-* Riverpod
-* GoRouter
-* Material 3
-* FL Chart
+```mermaid
+erDiagram
+    users {
+        uuid id PK
+        text email UK
+        text password_hash
+        text firebase_uid UK
+        boolean is_active
+        timestamp created_at
+    }
 
-### Backend
+    expenses {
+        uuid id PK
+        uuid user_id FK
+        numeric amount
+        text category
+        text description
+        timestamp logged_at
+    }
 
-* FastAPI
-* SQLAlchemy
-* Alembic
-* Pydantic
+    savings_goals {
+        uuid id PK
+        uuid user_id FK
+        text title
+        numeric target_amount
+        numeric current_amount
+        date target_date
+    }
 
-### Database
+    coding_profiles {
+        uuid id PK
+        uuid user_id FK
+        text leetcode_username
+        text github_username
+        boolean is_active
+    }
 
-* PostgreSQL
-* Redis
+    coding_activities {
+        uuid id PK
+        uuid user_id FK
+        integer commits_count
+        integer problems_solved
+        date logged_date
+    }
 
-### AI & Memory
+    learning_sessions {
+        uuid id PK
+        uuid user_id FK
+        uuid subject_id FK
+        timestamp start_time
+        timestamp end_time
+        integer focus_duration_minutes
+        text notes
+    }
 
-* Gemini API
-* ChromaDB
-* RAG Architecture
-
-### Authentication
-
-* Firebase Authentication
-
-### Notifications
-
-* Firebase Cloud Messaging
-
----
-
-## 📂 Project Structure
-
-```text
-DearMe/
-│
-├── frontend/
-│   ├── lib/
-│   ├── assets/
-│   └── widgets/
-│
-├── backend/
-│   ├── app/
-│   ├── alembic/
-│   ├── tests/
-│   └── requirements.txt
-│
-├── docs/
-│   ├── architecture/
-│   ├── database/
-│   └── api/
-│
-└── README.md
+    users ||--o{ expenses : owns
+    users ||--o{ savings_goals : tracks
+    users ||--o{ coding_profiles : registers
+    users ||--o{ coding_activities : logs
+    users ||--o{ learning_sessions : focus
 ```
 
 ---
 
-## 📊 Core Modules
+## 3. Core API Documentation
 
-### User Management
+### Authentication `/api/v1/auth`
+*   `POST /signup`: Register a new email/password account.
+*   `POST /login`: Log in with email/password and obtain a native JWT token.
+*   `POST /firebase`: Exchange a Firebase ID Token for a session token.
+*   `GET /me`: Fetch the current authenticated user's profile.
 
-* Authentication
-* Profile Management
-* Preferences
-* Settings
+### River Engine `/api/v1/river`
+*   `GET /state`: Retrieves the calculated physical parameters of the user's river ecosystem (`flow_rate`, `water_clarity`, `flora_density`, `active_bridges`, `current_weather`, `time_of_day`).
 
-### Health Module
+### Student Academic Hub `/api/v1/student`
+*   `POST /subjects` / `GET /subjects`: Create and list academic subjects.
+*   `POST /sessions` / `GET /sessions`: Log Pomodoro study focus time blocks.
+*   `POST /events` / `GET /events`: Manage timetable schedules and exams.
+*   `GET /attendance`: Retrieve overall subject attendance percentages.
 
-* Water Tracking
-* Sleep Tracking
-* Meal Tracking
-* Menstrual Health Tracking
+### Coding Hub `/api/v1/coding`
+*   `POST /profile` / `GET /profile`: Register GitHub and LeetCode usernames.
+*   `POST /activity` / `GET /activity`: Log daily commits or solved problems.
+*   `GET /stats`: Retrieve streaks and aggregate counts.
 
-### Productivity Module
+### Career Hub `/api/v1/career`
+*   `POST /companies` / `GET /companies`: Register hiring companies.
+*   `POST /applications` / `GET /applications`: Track placement pipelines (applied, screening, interview, offered).
+*   `GET /stats`: Fetch application-to-interview conversion ratios.
 
-* Goals
-* Tasks
-* Study Sessions
-* Habits
-
-### AI Module
-
-* AI Chat
-* AI Memory
-* AI Recommendations
-* AI Analytics
-
-### Placement Module
-
-* Applications
-* Assessments
-* Interviews
-* Progress Tracking
-
-### Analytics Module
-
-* Life Score
-* Health Insights
-* Productivity Insights
-* Placement Readiness
+### Health & Finance Hubs
+*   `POST /health/cycle` / `GET /cycle/prediction`: Predict next period timelines.
+*   `POST /finance/expenses` / `GET /finance/summary`: Log expenditures and track savings targets.
 
 ---
 
-## 🌱 Roadmap
+## 4. Installation & Local Startup
 
-### Phase 1
+### Backend Prerequisites
+1. Python 3.10+
+2. PostgreSQL (with `pgcrypto` extension)
 
-* [x] Project Planning
-* [x] Architecture Design
-* [ ] Database Schema
-* [ ] Backend Setup
+### Startup Commands
 
-### Phase 2
-
-* [ ] Flutter UI
-* [ ] Authentication
-* [ ] Dashboard
-* [ ] Health Tracking
-
-### Phase 3
-
-* [ ] AI Companion
-* [ ] AI Memory System
-* [ ] Analytics Engine
-
-### Phase 4
-
-* [ ] Placement Hub
-* [ ] Squad Collaboration
-* [ ] Production Deployment
-
----
-
-## 👩‍💻 Team
-
-### Founder & Project Lead
-
-**Nhowmitha Suresh**
-
-### Contributors
-
-* Ambika
-* Diviya
+1. **Navigate to the backend directory and activate the virtual environment**:
+   ```powershell
+   # Windows
+   .venv\Scripts\activate
+   ```
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Configure Environment variables** in a `.env` file at the root:
+   ```env
+   DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/dearme
+   SECRET_KEY=yoursecretjwtkeyhere
+   GEMINI_API_KEY=AIzaSy...
+   ```
+4. **Start the FastAPI App**:
+   ```bash
+   uvicorn app.main:app --reload
+   ```
+5. **Open Swagger API Docs**: Navigate to `http://localhost:8000/docs` in your browser.
 
 ---
 
-## 💜 Mission
+## 5. Staging & Production Deployment (Docker)
 
-DearMe exists to help students understand themselves better, stay healthy, remain productive, and achieve their goals through the power of AI.
+To deploy the application inside Docker containers:
 
-**Track less. Understand more. Grow every day. 🌸**
+1. **Build and Run via Docker Compose**:
+   ```bash
+   docker-compose up --build -d
+   ```
+2. **Apply Alembic migrations inside the container**:
+   ```bash
+   docker-compose exec web alembic upgrade head
+   ```
+
+---
+
+## 6. Developer & Extension Guide
+
+*   **Adding New River Renders**: Update the wave custom painter in [river_painter.dart](file:///c:/Users/Lenovo/Desktop/DearMe/frontend/lib/core/ui/widgets/river_painter.dart) to draw custom elements (like bridges or fish) based on values passed from the dashboard view state.
+*   **Running Tests**: Run `.venv\Scripts\python -m pytest` to execute all automated test scenarios.
