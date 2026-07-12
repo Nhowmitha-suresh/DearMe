@@ -12,13 +12,9 @@ router = APIRouter(prefix='/ai', tags=['ai'])
 @router.post('/chat', response_model=ChatResponse)
 async def chat(req: ChatRequest, db: AsyncSession = Depends(get_db), user=Depends(get_current_user)):
     svc = AIService(db)
-    # Example flow: store short-term memory and echo; real integration calls Gemini + RAG
-    conv = await svc.start_conversation(user, topic=req.context.get('topic') if req.context else None)
-    msg = await svc.add_message(conv, 'user', req.message)
-    # echo reply for now
-    reply = f"Echo: {req.message}"
-    await svc.add_message(conv, 'assistant', reply)
-    return ChatResponse(reply=reply, sources=[])
+    reply, sources = await svc.generate_response(user, req.message)
+    return ChatResponse(reply=reply, sources=sources)
+
 
 
 @router.post('/memories', response_model=AIMemoryRead)

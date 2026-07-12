@@ -8,6 +8,7 @@ from .journal import router as journal_router
 from .notifications import router as notifications_router
 from .tasks import router as tasks_router
 from .users import router as users_router
+from .river import router as river_router
 
 
 api_router = APIRouter(prefix='/api/v1')
@@ -19,3 +20,4 @@ api_router.include_router(tasks_router)
 api_router.include_router(journal_router)
 api_router.include_router(notifications_router)
 api_router.include_router(ai_router)
+api_router.include_router(river_router)

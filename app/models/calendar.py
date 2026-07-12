@@ -22,7 +22,8 @@ class CalendarEvent(Base, IDMixin, TimestampMixin):
     end_at = Column(sa.TIMESTAMP(timezone=True))
     location = Column(Text)
     recurring_rule = Column(Text)
-    metadata = Column(sa.JSON)
+    event_metadata = Column("metadata", sa.JSON)
+
 
     participants = relationship('EventParticipant', back_populates='event', cascade='all, delete-orphan')
 

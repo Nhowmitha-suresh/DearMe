@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class FloatingMascot extends StatefulWidget {
@@ -14,7 +15,7 @@ class _FloatingMascotState extends State<FloatingMascot> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 5))..repeat(reverse: true);
+    _ctrl = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat(reverse: true);
   }
 
   @override
@@ -28,7 +29,7 @@ class _FloatingMascotState extends State<FloatingMascot> with SingleTickerProvid
     return AnimatedBuilder(
       animation: _ctrl,
       builder: (context, child) {
-        final dy = 6 * sin(_ctrl.value * 2 * 3.14159);
+        final dy = 8 * math.sin(_ctrl.value * 2 * math.pi);
         return Transform.translate(
           offset: Offset(0, dy),
           child: Container(
@@ -36,13 +37,24 @@ class _FloatingMascotState extends State<FloatingMascot> with SingleTickerProvid
             height: widget.size,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(colors: [Color(0xFFFFE6EE), Color(0xFFFFCFE6)]),
-              boxShadow: [BoxShadow(color: Colors.pink.shade100.withOpacity(0.4), blurRadius: 12, spreadRadius: 1)],
+              gradient: const LinearGradient(
+                colors: [Color(0xFFE0F7FA), Color(0xFF00ACC1)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF00ACC1).withOpacity(0.3),
+                  blurRadius: 16,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
-            child: const Icon(Icons.person, color: Colors.white, size: 40),
+            child: const Icon(Icons.water_drop, color: Colors.white, size: 36),
           ),
         );
       },
     );
   }
 }
+

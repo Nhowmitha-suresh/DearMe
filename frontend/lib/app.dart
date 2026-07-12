@@ -8,10 +8,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DearMe',
-      theme: buildPalePinkTheme(),
+      title: 'Nadhi',
+      theme: buildNadhiNatureTheme(),
       home: const DashboardView(),
       debugShowCheckedModeBanner: false,
     );
+
   }
 }

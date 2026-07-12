@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str = 'change-me'
     ALLOWED_HOSTS: str = '*'
     DEBUG: bool = False
+    GEMINI_API_KEY: str | None = None
+    GEMINI_MODEL: str = 'gemini-1.5-flash'
 
 
 settings = Settings()
+

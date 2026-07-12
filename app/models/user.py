@@ -1,37 +1,10 @@
 from __future__ import annotations
 
-from typing import List, Optional
-import uuid
-from sqlalchemy import String, Integer, JSON, Index, Date, ForeignKey
-from sqlalchemy import Enum as SAEnum
-from sqlalchemy import Numeric
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import UUID as PGUUID
-
-from app.models.base import Base, IDMixin, AuditMixin, SoftDeleteMixin, GenderEnum
-
-
-class User(Base, IDMixin, AuditMixin, SoftDeleteMixin):
-    __tablename__ = 'users'
-    __table_args__ = (
-        Index('ix_users_email', 'email'),
-    )
-
-    email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
-    primary_phone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    firebase_uid: Mapped[Optional[str]] = mapped_column(String, unique=True)
-
-    profiles: Mapped[List['UserProfile']] = relationship('UserProfile', back_populates='user', cascade='all, delete-orphan')
-    preferences: Mapped[List['UserPreference']] = relationship('UserPreference', back_populates='user', cascade='all, delete-orphan')
-
-
-from __future__ import annotations
-
-import uuid
-from datetime import datetime
+from datetime import date, datetime
 from typing import Optional
+import uuid
 
-from sqlalchemy import Boolean, Date, Index, Integer, JSON, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, Float, ForeignKey, Index, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.dialects.postgresql import INET, UUID as PGUUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -75,13 +48,13 @@ class UserProfile(Base, IDMixin, AuditMixin, SoftDeleteMixin):
     )
     first_name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     last_name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    date_of_birth: Mapped[Optional[datetime.date]] = mapped_column(Date, nullable=True)
+    date_of_birth: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     gender: Mapped[Optional[GenderEnum]] = mapped_column(SAEnum(GenderEnum, name='gender_enum'), nullable=True)
     college: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     department: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     year: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    height_cm: Mapped[Optional[float]] = mapped_column(nullable=True)
-    weight_kg: Mapped[Optional[float]] = mapped_column(nullable=True)
+    height_cm: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    weight_kg: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     blood_group: Mapped[Optional[str]] = mapped_column(String(5), nullable=True)
     ai_personality: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     avatar_url: Mapped[Optional[str]] = mapped_column(String, nullable=True)
@@ -150,11 +123,11 @@ class RefreshToken(Base, IDMixin, AuditMixin, SoftDeleteMixin):
         nullable=False,
     )
     token: Mapped[str] = mapped_column(Text, nullable=False)
-    issued_at: Mapped[datetime] = mapped_column(nullable=False)
-    expires_at: Mapped[Optional[datetime]] = mapped_column(nullable=True)
+    issued_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     device_info: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     ip_address: Mapped[Optional[str]] = mapped_column(INET, nullable=True)
-    revoked_at: Mapped[Optional[datetime]] = mapped_column(nullable=True)
+    revoked_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     user: Mapped['User'] = relationship('User', back_populates='refresh_tokens')
 
@@ -169,7 +142,7 @@ class LoginHistory(Base, IDMixin):
         nullable=False,
     )
     provider: Mapped[Optional[ProviderEnum]] = mapped_column(SAEnum(ProviderEnum, name='provider_enum'), nullable=True)
-    login_at: Mapped[datetime] = mapped_column(nullable=False)
+    login_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     device_info: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     ip_address: Mapped[Optional[str]] = mapped_column(INET, nullable=True)
     session_info: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
