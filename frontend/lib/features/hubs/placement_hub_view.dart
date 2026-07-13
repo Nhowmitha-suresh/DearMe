@@ -278,9 +278,9 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
           ),
           const SizedBox(height: 20),
           
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text("Visiting Companies", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF004D5A))),
               Icon(Icons.filter_list, color: Color(0xFF00ACC1), size: 20),
             ],
@@ -467,8 +467,8 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
                           border: Border.all(color: Colors.grey.shade300),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: Row(
-                          children: const [
+                        child: const Row(
+                          children: [
                             Text("Update Status", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Color(0xFF007A87))),
                             SizedBox(width: 4),
                             Icon(Icons.arrow_drop_down, size: 16, color: Color(0xFF007A87)),
@@ -518,14 +518,14 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
               ),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Row(
+            child: const Row(
               children: [
-                const Icon(Icons.water, color: Color(0xFF00796B), size: 32),
-                const SizedBox(width: 12),
+                Icon(Icons.water, color: Color(0xFF00796B), size: 32),
+                SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text("Spirit Nadhi Feedback", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF004D40), fontSize: 14)),
                       SizedBox(height: 4),
                       Text(
