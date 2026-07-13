@@ -8,40 +8,8 @@ Nadhi is a premium, nature-inspired AI life companion designed for students. By 
 
 The backend is built using FastAPI following a decoupled **Clean Architecture** (Repository + Service Layer) design, separating concerns between controllers, logic services, and persistence layers.
 
-```mermaid
-graph TD
-    subgraph Client Application
-        FlutterUI["Flutter Frontend (Material 3)"]
-        RiverWave["RiverFlowWidget (Custom CustomPainter)"]
-        Dashboard["Dashboard View"]
-    end
+<img width="1915" height="910" alt="image" src="https://github.com/user-attachments/assets/ffe0198c-a94f-49a2-a542-59bc2370c086" />
 
-    subgraph API Route Layer (FastAPI)
-        APIRouter["app/api/__init__.py"]
-        AuthAPI["auth.py (Local JWT & Firebase)"]
-        RiverAPI["river.py (River state endpoint)"]
-        HubsAPI["student_hub.py, coding.py, career.py, finance.py"]
-    end
-
-    subgraph Business Logic & Persistence
-        RiverService["app/services/river_service.py"]
-        AIService["app/services/ai_service.py (Gemini + RAG)"]
-        Repors["app/repositories/ (UserRepository, etc.)"]
-        SQLModels["app/models/ (SQLAlchemy Declarative Models)"]
-        DB["PostgreSQL Database Schema"]
-    end
-
-    FlutterUI --> Dashboard
-    Dashboard --> RiverWave
-    Dashboard --> APIRouter
-    APIRouter --> AuthAPI
-    APIRouter --> RiverAPI
-    APIRouter --> HubsAPI
-    RiverAPI --> RiverService
-    HubsAPI --> SQLModels
-    SQLModels --> Repors
-    Repors --> DB
-```
 
 ---
 
