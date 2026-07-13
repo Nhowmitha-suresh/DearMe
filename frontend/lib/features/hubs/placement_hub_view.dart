@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PlacementHubView extends StatefulWidget {
-  const PlacementHubView({Key? key}) : super(key: key);
+  const PlacementHubView({super.key});
 
   @override
   State<PlacementHubView> createState() => _PlacementHubViewState();
@@ -26,7 +26,7 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
       "location": "Bangalore, India",
       "deadline": "July 25, 2026",
       "logo": "G",
-      "color": Color(0xFF4285F4),
+      "color": const Color(0xFF4285F4),
     },
     {
       "name": "Microsoft",
@@ -35,7 +35,7 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
       "location": "Hyderabad, India",
       "deadline": "July 30, 2026",
       "logo": "M",
-      "color": Color(0xFFF25022),
+      "color": const Color(0xFFF25022),
     },
     {
       "name": "Meta",
@@ -44,7 +44,7 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
       "location": "Remote / London",
       "deadline": "August 05, 2026",
       "logo": "∞",
-      "color": Color(0xFF0081FB),
+      "color": const Color(0xFF0081FB),
     },
     {
       "name": "Stripe",
@@ -53,7 +53,7 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
       "location": "Bangalore, India",
       "deadline": "August 12, 2026",
       "logo": "S",
-      "color": Color(0xFF635BFF),
+      "color": const Color(0xFF635BFF),
     },
   ];
 
@@ -64,14 +64,14 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
       "role": "Software Engineering Intern",
       "status": "Online Assessment", // Status values: Applied, OA, Interviewing, Offered, Rejected
       "appliedDate": "July 10, 2026",
-      "color": Color(0xFF4285F4),
+      "color": const Color(0xFF4285F4),
     },
     {
       "company": "Stripe",
       "role": "Backend Engineer (SDE I)",
       "status": "Applied",
       "appliedDate": "July 12, 2026",
-      "color": Color(0xFF635BFF),
+      "color": const Color(0xFF635BFF),
     },
   ];
 
@@ -104,6 +104,8 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
   @override
   void dispose() {
     _tabController.dispose();
+    _mockTopicCtrl.dispose();
+    _mockFeedbackCtrl.dispose();
     super.dispose();
   }
 
@@ -208,158 +210,161 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
   Widget _buildJobsTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
-      children: [
-        // Profile Summary Panel
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.teal.shade900.withOpacity(0.04),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _studentName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF004D5A)),
-                      ),
-                      Text("CGPA: $_cgpa • $_department", style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                    ],
-                  ),
-                  const CircleAvatar(
-                    backgroundColor: Color(0xFFE0F2F1),
-                    child: Icon(Icons.person, color: Color(0xFF007A87)),
-                  ),
-                ],
-              ),
-              const Divider(height: 24),
-              const Text("Target Roles", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF004D5A))),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 6,
-                children: _targetRoles.map((r) => Chip(
-                  label: Text(r, style: const TextStyle(fontSize: 10, color: Color(0xFF004D5A))),
-                  backgroundColor: const Color(0xFFB2DFDB).withOpacity(0.4),
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                )).toList(),
-              ),
-              const SizedBox(height: 8),
-              const Text("Skills", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF004D5A))),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 6,
-                children: _skills.map((s) => Chip(
-                  label: Text(s, style: const TextStyle(fontSize: 10, color: Color(0xFF007A87))),
-                  backgroundColor: const Color(0xFFE0F7FA),
-                  padding: EdgeInsets.zero,
-                  visualDensity: VisualDensity.compact,
-                )).toList(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text("Visiting Companies", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF004D5A))),
-            Icon(Icons.filter_list, color: Color(0xFF00ACC1), size: 20),
-          ],
-        ),
-        const SizedBox(height: 12),
-
-        // Company Listings
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _companies.length,
-          itemBuilder: (context, idx) {
-            final c = _companies[idx];
-            return Card(
-              margin: const EdgeInsets.only(bottom: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-              elevation: 1.5,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Profile Summary Panel
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.teal.shade900.withValues(alpha: 0.04),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: 22,
-                          backgroundColor: c["color"].withOpacity(0.12),
-                          child: Text(
-                            c["logo"],
-                            style: TextStyle(color: c["color"], fontWeight: FontWeight.bold, fontSize: 20),
-                          ),
+                        Text(
+                          _studentName,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Color(0xFF004D5A)),
                         ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(c["role"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                              Text(c["name"], style: TextStyle(color: c["color"], fontWeight: FontWeight.w600, fontSize: 13)),
-                            ],
-                          ),
-                        ),
+                        Text("CGPA: $_cgpa • $_department", style: const TextStyle(color: Colors.grey, fontSize: 13)),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Icon(Icons.monetization_on_outlined, size: 16, color: Colors.grey),
-                        const SizedBox(width: 6),
-                        Text(c["package"], style: const TextStyle(fontSize: 12, color: Colors.black87)),
-                        const Spacer(),
-                        const Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
-                        const SizedBox(width: 6),
-                        Text(c["location"], style: const TextStyle(fontSize: 12, color: Colors.black87)),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Deadline: ${c["deadline"]}", style: const TextStyle(fontSize: 11, color: Colors.redAccent, fontWeight: FontWeight.bold)),
-                        ElevatedButton(
-                          onPressed: () => _applyToCompany(c),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF007A87),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: const Text("Apply", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                        ),
-                      ],
+                    const CircleAvatar(
+                      backgroundColor: Color(0xFFE0F2F1),
+                      child: Icon(Icons.person, color: Color(0xFF007A87)),
                     ),
                   ],
                 ),
-              ),
-            );
-          },
-        ),
-      ],
+                const Divider(height: 24),
+                const Text("Target Roles", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF004D5A))),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  children: _targetRoles.map((r) => Chip(
+                    label: Text(r, style: const TextStyle(fontSize: 10, color: Color(0xFF004D5A))),
+                    backgroundColor: const Color(0xFFB2DFDB).withValues(alpha: 0.4),
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                  )).toList(),
+                ),
+                const SizedBox(height: 8),
+                const Text("Skills", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Color(0xFF004D5A))),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  children: _skills.map((s) => Chip(
+                    label: Text(s, style: const TextStyle(fontSize: 10, color: Color(0xFF007A87))),
+                    backgroundColor: const Color(0xFFE0F7FA),
+                    padding: EdgeInsets.zero,
+                    visualDensity: VisualDensity.compact,
+                  )).toList(),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text("Visiting Companies", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF004D5A))),
+              Icon(Icons.filter_list, color: Color(0xFF00ACC1), size: 20),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Company Listings
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _companies.length,
+            itemBuilder: (context, idx) {
+              final c = _companies[idx];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 14),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                elevation: 1.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 22,
+                            backgroundColor: (c["color"] as Color).withValues(alpha: 0.12),
+                            child: Text(
+                              c["logo"],
+                              style: TextStyle(color: c["color"], fontWeight: FontWeight.bold, fontSize: 20),
+                            ),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(c["role"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                                Text(c["name"], style: TextStyle(color: c["color"], fontWeight: FontWeight.w600, fontSize: 13)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          const Icon(Icons.monetization_on_outlined, size: 16, color: Colors.grey),
+                          const SizedBox(width: 6),
+                          Text(c["package"], style: const TextStyle(fontSize: 12, color: Colors.black87)),
+                          const Spacer(),
+                          const Icon(Icons.location_on_outlined, size: 16, color: Colors.grey),
+                          const SizedBox(width: 6),
+                          Text(c["location"], style: const TextStyle(fontSize: 12, color: Colors.black87)),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Deadline: ${c["deadline"]}", style: const TextStyle(fontSize: 11, color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                          ElevatedButton(
+                            onPressed: () => _applyToCompany(c),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF007A87),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text("Apply", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -485,119 +490,122 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
   Widget _buildPrepTab() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
-      children: [
-        // Preparation Progress Cards
-        Row(
-          children: [
-            Expanded(
-              child: _buildMetricCard("DSA Solved", "148 Problems", Icons.code, Colors.orange),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: _buildMetricCard("Mock Score", "84% Readiness", Icons.analytics, Colors.teal),
-            ),
-          ],
-        ),
-        const SizedBox(height: 20),
-
-        // Spirit Nadhi Resume Checker Tip
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Preparation Progress Cards
+          Row(
             children: [
-              const Icon(Icons.water, color: Color(0xFF00796B), size: 32),
-              const SizedBox(width: 12),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text("Spirit Nadhi Feedback", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF004D40), fontSize: 14)),
-                    SizedBox(height: 4),
-                    Text(
-                      "\"Your coding stream is flowing with focus today. Keep solved DSA topics active on LeetCode; it forms the bedrock for Microsoft and Stripe tests next week.\"",
-                      style: TextStyle(fontStyle: FontStyle.italic, color: Color(0xFF00695C), fontSize: 12, height: 1.3),
-                    ),
-                  ],
+                child: _buildMetricCard("DSA Solved", "148 Problems", Icons.code, Colors.orange),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: _buildMetricCard("Mock Score", "84% Readiness", Icons.analytics, Colors.teal),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+
+          // Spirit Nadhi Resume Checker Tip
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: [Color(0xFFE0F2F1), Color(0xFFB2DFDB)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.water, color: Color(0xFF00796B), size: 32),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text("Spirit Nadhi Feedback", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF004D40), fontSize: 14)),
+                      SizedBox(height: 4),
+                      Text(
+                        "\"Your coding stream is flowing with focus today. Keep solved DSA topics active on LeetCode; it forms the bedrock for Microsoft and Stripe tests next week.\"",
+                        style: TextStyle(fontStyle: FontStyle.italic, color: Color(0xFF00695C), fontSize: 12, height: 1.3),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+
+          // Mock Interviews Header
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Mock Interview Log", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF004D5A))),
+              ElevatedButton.icon(
+                onPressed: _showAddMockDialog,
+                icon: const Icon(Icons.add, size: 16, color: Colors.white),
+                label: const Text("Log Mock", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF00ACC1),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  minimumSize: Size.zero,
                 ),
               ),
             ],
           ),
-        ),
-        const SizedBox(height: 24),
+          const SizedBox(height: 12),
 
-        // Mock Interviews Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text("Mock Interview Log", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF004D5A))),
-            ElevatedButton.icon(
-              onPressed: _showAddMockDialog,
-              icon: const Icon(Icons.add, size: 16, color: Colors.white),
-              label: const Text("Log Mock", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF00ACC1),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                minimumSize: Size.zero,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-
-        // Mock Interview Log List
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _mockInterviews.length,
-          itemBuilder: (context, idx) {
-            final mock = _mockInterviews[idx];
-            return Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: Padding(
-                padding: const EdgeInsets.all(14.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(mock["topic"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E293B))),
-                        Text(mock["date"], style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: List.generate(5, (starIdx) {
-                        return Icon(
-                          starIdx < mock["rating"] ? Icons.star : Icons.star_border,
-                          color: Colors.amber,
-                          size: 16,
-                        );
-                      }),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      mock["feedback"],
-                      style: TextStyle(color: Colors.grey.shade800, fontSize: 12, height: 1.3),
-                    ),
-                  ],
+          // Mock Interview Log List
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _mockInterviews.length,
+            itemBuilder: (context, idx) {
+              final mock = _mockInterviews[idx];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 12),
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
+                child: Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(mock["topic"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF1E293B))),
+                          Text(mock["date"], style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Row(
+                        children: List.generate(5, (starIdx) {
+                          return Icon(
+                            starIdx < mock["rating"] ? Icons.star : Icons.star_border,
+                            color: Colors.amber,
+                            size: 16,
+                          );
+                        }),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        mock["feedback"],
+                        style: TextStyle(color: Colors.grey.shade800, fontSize: 12, height: 1.3),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
-      ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -608,7 +616,7 @@ class _PlacementHubViewState extends State<PlacementHubView> with SingleTickerPr
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 10),
         ],
       ),
       child: Column(

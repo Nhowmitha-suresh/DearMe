@@ -26,7 +26,8 @@ async def main():
 
     async with engine.begin() as conn:
         print('Applying schema...')
-        await conn.exec_driver_sql(sql)
+        raw_conn = await conn.get_raw_connection()
+        await raw_conn.driver_connection.execute(sql)
     await engine.dispose()
     print('Schema applied successfully')
 
