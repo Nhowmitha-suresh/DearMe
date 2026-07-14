@@ -10,6 +10,7 @@ from app.models.user import User, UserProfile, UserSetting
 
 def test_profile_endpoints(monkeypatch):
     mock_session = AsyncMock()
+    mock_session.add = MagicMock()
     mock_user = User(id=uuid.uuid4(), email="student@nadhi.edu")
 
     # Override dependencies

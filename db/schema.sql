@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS water_logs (
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     amount_ml INTEGER NOT NULL,
     logged_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    log_date DATE GENERATED ALWAYS AS (logged_at::date) STORED,
+    log_date DATE GENERATED ALWAYS AS ((logged_at AT TIME ZONE 'UTC')::date) STORED,
     notes TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS sleep_logs (
     is_deleted BOOLEAN DEFAULT FALSE
 );
 CREATE INDEX IF NOT EXISTS idx_sleep_logs_user_id ON sleep_logs (user_id);
-CREATE INDEX IF NOT EXISTS idx_sleep_logs_sleep_date ON sleep_logs ((sleep_time::date));
+CREATE INDEX IF NOT EXISTS idx_sleep_logs_sleep_date ON sleep_logs (sleep_time);
 
 -- MEALS
 CREATE TABLE IF NOT EXISTS meals (
@@ -779,7 +779,6 @@ CREATE TABLE IF NOT EXISTS leaderboards (
 );
 
 -- Index hints for analytics queries
-CREATE INDEX IF NOT EXISTS idx_daily_metrics_user_date ON daily_metrics (user_id, metric_date);
 
 -- Triggers to update updated_at fields
 -- Attach trigger to tables that have updated_at
