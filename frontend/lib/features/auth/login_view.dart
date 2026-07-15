@@ -47,6 +47,7 @@ class _LoginViewState extends State<LoginView> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24.0),
             child: Container(
+              width: MediaQuery.of(context).size.width / 3,
               padding: const EdgeInsets.all(24.0),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.12),

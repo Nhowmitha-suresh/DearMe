@@ -76,41 +76,17 @@ class _NadhiLogoState extends State<NadhiLogo> with SingleTickerProviderStateMix
                 ),
                 // Stylized Italic N
                 Center(
-                  child: Transform.rotate(
-                    angle: -0.05, // Subtle italic skew
-                    child: Text(
-                      'N',
-                      style: TextStyle(
-                        fontFamily: 'Outfit',
-                        fontSize: widget.size * 0.52,
-                        fontWeight: FontWeight.w900,
-                        fontStyle: FontStyle.italic,
-                        letterSpacing: -2,
-                        foreground: Paint()
-                          ..shader = const LinearGradient(
-                            colors: [
-                              Color(0xFFE0F7FA),
-                              Color(0xFF80DEEA),
-                              Color(0xFF26C6DA),
-                              Color(0xFF00ACC1),
-                            ],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ).createShader(Rect.fromLTWH(0, 0, widget.size, widget.size)),
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.4),
-                            offset: const Offset(2, 2),
-                            blurRadius: 4,
-                          ),
-                          Shadow(
-                            color: const Color(0xFF00E5FF).withOpacity(0.5),
-                            offset: const Offset(0, 0),
-                            blurRadius: 10,
-                          ),
-                        ],
-                      ),
-                    ),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    width: widget.size * 0.8,
+                    height: widget.size * 0.8,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(
+                        Icons.image_not_supported,
+                        color: Colors.white54,
+                      );
+                    },
                   ),
                 ),
               ],
